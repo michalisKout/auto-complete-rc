@@ -1,18 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
-import type {
-  AutocompleteItem,
-  FilterItemsOperator,
-  UseAutocompleteOptions,
-  UseAutocompleteReturn,
-} from "../types";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { AutocompleteItem, FilterItemsOperator, UseAutocompleteOptions } from "../types";
 
-const DEFAULT_MIN_CHARS = 2;
+const DEFAULT_MIN_CHARS = 1;
 
 export const useAutocomplete = (
-  query: string,
   filterItems: FilterItemsOperator,
   options: UseAutocompleteOptions,
-): UseAutocompleteReturn => {
+) => {
+  const refController = useRef<AbortController | null>(null);
   const [filteredItems, setFilteredItems] = useState<AutocompleteItem[]>(
     options?.defaultItems || [],
   );
@@ -20,12 +15,22 @@ export const useAutocomplete = (
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setError(null);
+    refController.current = new AbortController();
+    return () => {
+      if (refController.current) {
+        refController.current.abort();
+        refController.current = null;
+      }
+    };
+  }, []);
 
-    const getFilteredItems = async (query: string) => {
+  const asyncSearch = useCallback(
+    async (query: string) => {
+      setError(null);
+      if (query.length < (options?.minChars || DEFAULT_MIN_CHARS)) return;
+
       try {
-        setIsLoading(true);
-        const results = await filterItems(query);
+        const results = await filterItems(query, refController.current?.signal);
         setFilteredItems(results);
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
@@ -33,10 +38,9 @@ export const useAutocomplete = (
       } finally {
         setIsLoading(false);
       }
-    };
+    },
+    [filterItems, options?.minChars],
+  );
 
-    if (query.length >= (options?.minChars || DEFAULT_MIN_CHARS)) getFilteredItems(query);
-  }, [query, filterItems, options?.minChars]);
-
-  return useMemo(() => ({ filteredItems, isLoading, error }), [filteredItems, isLoading, error]);
+  return { asyncSearch, filteredItems, isLoading, error, setIsLoading };
 };

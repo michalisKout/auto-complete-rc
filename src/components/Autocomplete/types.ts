@@ -7,10 +7,15 @@ export interface AutocompleteProps {
   defaultItems: AutocompleteItem[];
   disabled?: boolean;
   filterItems: FilterItemsOperator;
+  minChars?: number;
+  noResultsText?: string;
+  loadingText?: string;
+  debounceMs?: number;
 }
 
 export type FilterItemsOperator = (
   searchQuery: string,
+  abortSignal?: AbortSignal,
 ) => Promise<AutocompleteItem[]> | AutocompleteItem[];
 export interface AutocompleteItem {
   id: string | number;
@@ -21,12 +26,6 @@ export interface AutocompleteItem {
 export interface UseAutocompleteOptions {
   defaultItems?: AutocompleteItem[];
   minChars?: number;
-  maxResults?: number;
-  debounceMs?: number;
 }
 
-export interface UseAutocompleteReturn {
-  filteredItems: AutocompleteItem[];
-  isLoading: boolean;
-  error: string | null;
-}
+export type ANY = any;

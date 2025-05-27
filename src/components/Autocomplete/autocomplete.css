@@ -62,3 +62,29 @@
   background-color: var(--bg-color);
   color: var(--primary-color);
 }
+
+.autocomplete__loading,
+.autocomplete__no-results {
+  padding: 12px 16px;
+  text-align: center;
+  color: var(--fallback-text);
+  font-style: italic;
+  font-size: 14px;
+}
+
+.autocomplete__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.autocomplete__error {
+  padding: 12px 12px;
+  color: var(--error-main);
+  background-color: var(--error-secondary);
+  border: 1px solid var(--error-main);
+  border-radius: 4px;
+  font-size: 14px;
+  margin: 2px;
+}

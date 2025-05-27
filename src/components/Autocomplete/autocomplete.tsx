@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import "./Autocomplete.css";
 import { useAutocomplete } from "./hooks/useAutocomplete";
 import type { AutocompleteItem, AutocompleteProps } from "./types";
+import { debounce } from "./utils/debounce";
 
 /**
  * Autocomplete component for searching and selecting items
@@ -18,25 +19,39 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
   defaultItems = [],
   onSelect,
   filterItems,
+  debounceMs = 500,
+  minChars = 1,
+  noResultsText = "No results found",
+  loadingText = "Searching...",
 }) => {
   const [inputValue, setInputValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<AutocompleteItem | null>(null);
-
-  const handleInputChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.value;
-      setInputValue(value);
-      setIsOpen(value.length > 0);
-      onInputChange?.(value);
+  const { filteredItems, isLoading, asyncSearch, setIsLoading, error } = useAutocomplete(
+    filterItems,
+    {
+      defaultItems,
+      minChars,
     },
-    [onInputChange],
   );
 
-  // TODO: Handle loading and error states
-  const { filteredItems, isLoading, error } = useAutocomplete(inputValue, filterItems, {
-    defaultItems,
-  });
+  const handleSearch = useCallback(
+    async (value: string) => {
+      setIsOpen(value.length >= minChars && !disabled);
+      onInputChange?.(value);
+      await asyncSearch(value);
+    },
+    [onInputChange, disabled, asyncSearch, minChars],
+  );
+
+  const debouncedSearch = useCallback(debounce(handleSearch, debounceMs), []);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setIsLoading(true);
+    setInputValue(value);
+    debouncedSearch(value);
+  };
 
   const handleItemSelect = useCallback(
     (item: AutocompleteItem) => {
@@ -56,6 +71,9 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
 
   const inputId = `autocomplete-input-${testId}`;
   const dropdownId = `autocomplete-dropdown-${testId}`;
+  const noResults = filteredItems.length === 0 && !isLoading && inputValue.length > 0;
+  const hasError = !isLoading && error;
+  const shouldShowItems = !isLoading && !noResults && !error;
 
   return (
     <div className={`autocomplete ${className}`}>
@@ -69,6 +87,7 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
         disabled={disabled}
         autoComplete="off"
       />
+
       {isOpen && (
         <div
           data-testid={dropdownId}
@@ -78,17 +97,27 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
           aria-label="Search results"
           tabIndex={-1}
         >
-          {filteredItems?.map((item, index) => (
-            <div
-              key={item.id}
-              id={`${dropdownId}-item-${index}`}
-              className={`autocomplete__item ${isSelected(item.id) ? "autocomplete__item--selected" : ""}`}
-              aria-selected={selectedItem?.id === item.id}
-              onClick={() => handleItemSelect(item)}
-            >
-              {item.label}
+          {hasError && <div className="autocomplete__error">{error}</div>}
+          {isLoading && (
+            <div className="autocomplete__loading">
+              <div className="autocomplete__spinner" />
+              {loadingText}
             </div>
-          ))}
+          )}
+          {shouldShowItems &&
+            filteredItems?.map((item, index) => (
+              <div
+                key={item.id}
+                id={`${dropdownId}-item-${index}`}
+                className={`autocomplete__item ${isSelected(item.id) ? "autocomplete__item--selected" : ""}`}
+                aria-selected={selectedItem?.id === item.id}
+                onClick={() => handleItemSelect(item)}
+              >
+                {item.label}
+              </div>
+            ))}
+
+          {noResults && !error && <div className="autocomplete__no-results">{noResultsText}</div>}
         </div>
       )}
     </div>

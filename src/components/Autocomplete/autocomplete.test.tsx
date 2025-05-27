@@ -1,8 +1,8 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { mockData } from "../../../mockData";
 import { Autocomplete } from "./autocomplete";
-import { mockData } from "./mockData";
 import type { AutocompleteItem, AutocompleteProps } from "./types";
 
 describe("Autocomplete", () => {
@@ -70,7 +70,7 @@ describe("Autocomplete", () => {
       await user.type(input, "ap");
 
       await waitFor(() => {
-        expect(mockFilterItems).toHaveBeenCalledWith("ap");
+        expect(mockFilterItems).toHaveBeenCalledWith("ap", expect.any(AbortSignal));
       });
     });
 
@@ -146,13 +146,51 @@ describe("Autocomplete", () => {
       await user.type(input, "ap");
 
       await waitFor(() => {
-        expect(syncFilterItems).toHaveBeenCalledWith("ap");
+        expect(syncFilterItems).toHaveBeenCalledWith("ap", expect.any(AbortSignal));
         expect(screen.getByText("Apple")).toBeInTheDocument();
         expect(screen.getByText("Apricot")).toBeInTheDocument();
         expect(screen.getByText("Grape")).toBeInTheDocument();
         expect(screen.getByText("Grapefruit")).toBeInTheDocument();
         expect(screen.getByText("Pineapple")).toBeInTheDocument();
       });
+    });
+
+    it("displays no results message when search returns empty results", async () => {
+      const mockFilterItems = vi.fn().mockResolvedValue([]);
+      const user = userEvent.setup();
+
+      render(<Autocomplete {...defaultProps} filterItems={mockFilterItems} />);
+
+      const input = screen.getByTestId("autocomplete-input-test-id");
+      await user.type(input, "no results");
+
+      await waitFor(() => {
+        expect(mockFilterItems).toHaveBeenCalledWith("no results", expect.any(AbortSignal));
+      });
+
+      const dropdown = screen.getByTestId("autocomplete-dropdown-test-id");
+      expect(dropdown).toBeInTheDocument();
+      expect(dropdown).toContainElement(screen.getByText("No results found"));
+    });
+
+    it("displays error message when search fails", async () => {
+      const errorMessage = "API request failed";
+      const mockFilterItems = vi.fn().mockRejectedValue(new Error(errorMessage));
+      const user = userEvent.setup();
+
+      render(<Autocomplete {...defaultProps} filterItems={mockFilterItems} />);
+
+      const input = screen.getByTestId("autocomplete-input-test-id");
+      await user.type(input, "test");
+
+      await waitFor(() => {
+        expect(mockFilterItems).toHaveBeenCalledWith("test", expect.any(AbortSignal));
+      });
+
+      const dropdown = screen.getByTestId("autocomplete-dropdown-test-id");
+      expect(dropdown).toBeInTheDocument();
+      expect(dropdown).toContainElement(screen.getByText(errorMessage));
+      expect(screen.queryByText('No results found for "test"')).not.toBeInTheDocument();
     });
   });
 });
