@@ -1,7 +1,9 @@
 import { useCallback, useState } from "react";
 import "./Autocomplete.css";
+import { useAccessibility } from "./hooks/useAccessibility";
 import { useAutocomplete } from "./hooks/useAutocomplete";
 import { useClickOutside } from "./hooks/useClickOutside";
+import { useScrollSync } from "./hooks/useScrollSync";
 import type { AutocompleteItem, AutocompleteProps } from "./types";
 import { debounce } from "./utils/debounce";
 
@@ -25,6 +27,8 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
   noResultsText = "No results found",
   loadingText = "Searching...",
 }) => {
+  const inputId = `autocomplete-input-${testId}`;
+  const dropdownId = `autocomplete-dropdown-${testId}`;
   const [inputValue, setInputValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<AutocompleteItem | null>(null);
@@ -35,6 +39,27 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
       minChars,
     },
   );
+
+  const { accessibilityProps, setFocusedIndex, focusedIndex, handleKeyDown } = useAccessibility({
+    isOpen,
+    testId: dropdownId,
+    filteredItems,
+    onEnter: (item) => {
+      setSelectedItem(item);
+      setInputValue(item.label);
+      onInputChange?.(item.label);
+      setIsOpen(false);
+    },
+    onReset: () => {
+      setIsOpen(false);
+    },
+  });
+
+  useScrollSync({
+    focusedIndex,
+    dropdownId,
+    isOpen,
+  });
 
   const { ref } = useClickOutside<HTMLDivElement>({
     handleClick: () => {
@@ -67,9 +92,10 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
       onInputChange?.(item.label);
       setSelectedItem(item);
       setIsOpen(false);
+      setFocusedIndex(-1);
       onSelect?.(item);
     },
-    [onSelect, onInputChange],
+    [onSelect, onInputChange, setFocusedIndex],
   );
 
   const handleInputFocus = useCallback(() => {
@@ -81,8 +107,6 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
     [selectedItem],
   );
 
-  const inputId = `autocomplete-input-${testId}`;
-  const dropdownId = `autocomplete-dropdown-${testId}`;
   const noResults = filteredItems.length === 0 && !isLoading && inputValue.length > 0;
   const hasError = !isLoading && error;
   const shouldShowItems = !isLoading && !noResults && !error;
@@ -90,6 +114,7 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
   return (
     <div className={`autocomplete ${className}`} ref={ref}>
       <input
+        {...accessibilityProps}
         onFocus={handleInputFocus}
         data-testid={inputId}
         type="text"
@@ -99,6 +124,7 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
         placeholder={placeholder}
         disabled={disabled}
         autoComplete="off"
+        onKeyDown={handleKeyDown}
       />
 
       {isOpen && (
@@ -123,7 +149,7 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
                 key={item.id}
                 id={`${dropdownId}-item-${index}`}
                 className={`autocomplete__item ${isSelected(item.id) ? "autocomplete__item--selected" : ""}`}
-                aria-selected={selectedItem?.id === item.id}
+                aria-selected={index === focusedIndex}
                 onClick={() => handleItemSelect(item)}
               >
                 {item.label}

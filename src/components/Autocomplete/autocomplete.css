@@ -63,6 +63,11 @@
   color: var(--primary-color);
 }
 
+.autocomplete__item[aria-selected="true"] {
+  background-color: var(--bg-color);
+  color: var(--secondary-color);
+}
+
 .autocomplete__loading,
 .autocomplete__no-results {
   padding: 12px 16px;

@@ -193,4 +193,54 @@ describe("Autocomplete", () => {
       expect(screen.queryByText('No results found for "test"')).not.toBeInTheDocument();
     });
   });
+
+  describe("Accessibility", () => {
+    it("has proper ARIA attributes", () => {
+      render(<Autocomplete {...defaultProps} />);
+
+      const input = screen.getByTestId("autocomplete-input-test-id");
+
+      expect(input).toHaveAttribute("role", "combobox");
+      expect(input).toHaveAttribute("aria-expanded", "false");
+      expect(input).toHaveAttribute("aria-haspopup", "listbox");
+      expect(input).toHaveAttribute("autoComplete", "off");
+    });
+
+    it("scrolls focused item into view when navigating with arrow keys", async () => {
+      const mockScrollIntoView = vi.fn();
+      Element.prototype.scrollIntoView = mockScrollIntoView;
+
+      const items: AutocompleteItem[] = Array.from({ length: 10 }, (_, i) => ({
+        id: i,
+        label: `Item ${i}`,
+        value: `item-${i}`,
+      }));
+
+      const mockFilterItems = vi.fn().mockResolvedValue(items);
+      const user = userEvent.setup();
+
+      render(<Autocomplete {...defaultProps} filterItems={mockFilterItems} />);
+
+      const input = screen.getByTestId("autocomplete-input-test-id");
+      await user.type(input, "test");
+
+      await waitFor(() => {
+        expect(screen.getByText("Item 0")).toBeInTheDocument();
+      });
+
+      await user.keyboard("{ArrowDown}");
+
+      await waitFor(
+        () => {
+          expect(mockScrollIntoView).toHaveBeenCalledWith({
+            behavior: "smooth",
+            block: "nearest",
+          });
+        },
+        { timeout: 100 },
+      );
+
+      vi.restoreAllMocks();
+    });
+  });
 });
