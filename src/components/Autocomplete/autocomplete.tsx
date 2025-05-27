@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import "./Autocomplete.css";
 import { useAutocomplete } from "./hooks/useAutocomplete";
+import { useClickOutside } from "./hooks/useClickOutside";
 import type { AutocompleteItem, AutocompleteProps } from "./types";
 import { debounce } from "./utils/debounce";
 
@@ -35,6 +36,13 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
     },
   );
 
+  const { ref } = useClickOutside<HTMLDivElement>({
+    handleClick: () => {
+      setIsOpen(false);
+    },
+    isOpen,
+  });
+
   const handleSearch = useCallback(
     async (value: string) => {
       setIsOpen(value.length >= minChars && !disabled);
@@ -64,6 +72,10 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
     [onSelect, onInputChange],
   );
 
+  const handleInputFocus = useCallback(() => {
+    setIsOpen(inputValue.length >= minChars);
+  }, [inputValue.length, minChars]);
+
   const isSelected = useCallback(
     (itemId: number | string) => selectedItem?.id === itemId,
     [selectedItem],
@@ -76,8 +88,9 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
   const shouldShowItems = !isLoading && !noResults && !error;
 
   return (
-    <div className={`autocomplete ${className}`}>
+    <div className={`autocomplete ${className}`} ref={ref}>
       <input
+        onFocus={handleInputFocus}
         data-testid={inputId}
         type="text"
         className="autocomplete__input"
