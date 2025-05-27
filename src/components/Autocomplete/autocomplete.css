@@ -1,0 +1,28 @@
+.autocomplete {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+.autocomplete__input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--bg-color);
+  border-radius: 8px;
+  font-size: 16px;
+  line-height: 1.5;
+  background-color: white;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.autocomplete__input:focus {
+  border-color: var(--primary-color);
+}
+
+.autocomplete__input:disabled {
+  background-color: var(--bg-color);
+  color: var(--fallback-text);
+  cursor: not-allowed;
+}

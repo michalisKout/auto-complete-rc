@@ -1,3 +1,14 @@
+:root {
+  --primary-color: #2d96ff;
+  --secondary-color: #856404;
+  --bg-color: #e1e5e9;
+  --bg-hover: #f4f3f3;
+  --bg-color--secondary: #fff3cd;
+  --fallback-text: #999;
+  --error-main: #dc3545;
+  --error-secondary: #f8d7da;
+}
+
 .app {
   min-height: 100vh;
   display: flex;
@@ -15,4 +26,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.app__section {
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
 }
