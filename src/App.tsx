@@ -45,7 +45,7 @@ function App() {
             <h2>Basic example</h2>
             <Autocomplete
               onInputChange={handleInputChange}
-              placeholder="Basic input"
+              placeholder="Search Star Wars characters..."
               defaultItems={[]}
               filterItems={filterItems}
               onSelect={(item) => console.log("Selected item:", item)}
@@ -55,7 +55,7 @@ function App() {
           <section className="app__section">
             <h2>Static example</h2>
             <Autocomplete
-              placeholder="Static input"
+              placeholder="Search for fruits..."
               defaultItems={mockData}
               debounceMs={0}
               filterItems={(query) => {
