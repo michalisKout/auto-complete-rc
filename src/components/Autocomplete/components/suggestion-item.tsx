@@ -1,4 +1,5 @@
 import type { AutocompleteItem } from "../autocomplete.types";
+import { HighlightedText } from "./highlighted-text";
 
 type Props = {
   dropdownId: string;
@@ -25,7 +26,7 @@ export const SuggestionItem = ({
       aria-selected={isFocused}
       onClick={() => handleItemSelect(item)}
     >
-      {item.label}
+      <HighlightedText text={item.label} />
     </div>
   );
 };
