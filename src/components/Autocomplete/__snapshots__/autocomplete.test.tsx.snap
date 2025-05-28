@@ -1,0 +1,171 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Autocomplete > Async Filtering > allows item selection from async filtered results 1`] = `
+<div
+  aria-label="Search results"
+  class="autocomplete__dropdown"
+  data-testid="autocomplete-dropdown-test-id"
+  role="listbox"
+  tabindex="-1"
+>
+  <div
+    aria-selected="false"
+    class="autocomplete__item "
+    data-testid="autocomplete-dropdown-test-id-item-0"
+    id="autocomplete-dropdown-test-id-item-0"
+  >
+    <span>
+      <span
+        class="autocomplete__highlighted"
+      >
+        Ap
+      </span>
+      <span>
+        ple
+      </span>
+    </span>
+  </div>
+  <div
+    aria-selected="false"
+    class="autocomplete__item "
+    data-testid="autocomplete-dropdown-test-id-item-1"
+    id="autocomplete-dropdown-test-id-item-1"
+  >
+    <span>
+      <span
+        class="autocomplete__highlighted"
+      >
+        Ap
+      </span>
+      <span>
+        ricot
+      </span>
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Autocomplete > Async Filtering > works with synchronous filterItems function 1`] = `
+<div
+  aria-label="Search results"
+  class="autocomplete__dropdown"
+  data-testid="autocomplete-dropdown-test-id"
+  role="listbox"
+  tabindex="-1"
+>
+  <div
+    aria-selected="false"
+    class="autocomplete__item "
+    data-testid="autocomplete-dropdown-test-id-item-0"
+    id="autocomplete-dropdown-test-id-item-0"
+  >
+    <span>
+      <span
+        class="autocomplete__highlighted"
+      >
+        Ap
+      </span>
+      <span>
+        ple
+      </span>
+    </span>
+  </div>
+  <div
+    aria-selected="false"
+    class="autocomplete__item "
+    data-testid="autocomplete-dropdown-test-id-item-1"
+    id="autocomplete-dropdown-test-id-item-1"
+  >
+    <span>
+      <span>
+        Gr
+      </span>
+      <span
+        class="autocomplete__highlighted"
+      >
+        ap
+      </span>
+      <span>
+        e
+      </span>
+    </span>
+  </div>
+  <div
+    aria-selected="false"
+    class="autocomplete__item "
+    data-testid="autocomplete-dropdown-test-id-item-2"
+    id="autocomplete-dropdown-test-id-item-2"
+  >
+    <span>
+      <span>
+        P
+      </span>
+      <span
+        class="autocomplete__highlighted"
+      >
+        ap
+      </span>
+      <span>
+        aya
+      </span>
+    </span>
+  </div>
+  <div
+    aria-selected="false"
+    class="autocomplete__item "
+    data-testid="autocomplete-dropdown-test-id-item-3"
+    id="autocomplete-dropdown-test-id-item-3"
+  >
+    <span>
+      <span>
+        Gr
+      </span>
+      <span
+        class="autocomplete__highlighted"
+      >
+        ap
+      </span>
+      <span>
+        efruit
+      </span>
+    </span>
+  </div>
+  <div
+    aria-selected="false"
+    class="autocomplete__item "
+    data-testid="autocomplete-dropdown-test-id-item-4"
+    id="autocomplete-dropdown-test-id-item-4"
+  >
+    <span>
+      <span>
+        Pine
+      </span>
+      <span
+        class="autocomplete__highlighted"
+      >
+        ap
+      </span>
+      <span>
+        ple
+      </span>
+    </span>
+  </div>
+  <div
+    aria-selected="false"
+    class="autocomplete__item "
+    data-testid="autocomplete-dropdown-test-id-item-5"
+    id="autocomplete-dropdown-test-id-item-5"
+  >
+    <span>
+      <span
+        class="autocomplete__highlighted"
+      >
+        Ap
+      </span>
+      <span>
+        ricot
+      </span>
+    </span>
+  </div>
+</div>
+`;

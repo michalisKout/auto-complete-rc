@@ -30,7 +30,7 @@ export const SuggestionsDropdown = ({
 }: Props) => {
   return (
     <div
-      id={dropdownId}
+      data-testid={dropdownId}
       className="autocomplete__dropdown"
       role="listbox"
       aria-label="Search results"

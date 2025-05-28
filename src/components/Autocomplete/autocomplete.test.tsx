@@ -3,10 +3,10 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { mockData } from "../../../mockData";
 import { Autocomplete } from "./autocomplete";
-import type { AutocompleteItem, AutocompleteProps } from "./autocomplete.types";
+import type { AutocompleteInputProps, AutocompleteItem } from "./autocomplete.types";
 
 describe("Autocomplete", () => {
-  const defaultProps: AutocompleteProps = {
+  const defaultProps: AutocompleteInputProps = {
     onInputChange: vi.fn(),
     defaultItems: [],
     filterItems: vi.fn(),
@@ -88,8 +88,8 @@ describe("Autocomplete", () => {
       await user.type(input, "ap");
 
       await waitFor(() => {
-        expect(screen.getByText("Apple")).toBeInTheDocument();
-        expect(screen.getByText("Apricot")).toBeInTheDocument();
+        expect(screen.getByTestId("autocomplete-dropdown-test-id-item-0")).toBeInTheDocument();
+        expect(screen.getByTestId("autocomplete-dropdown-test-id-item-1")).toBeInTheDocument();
       });
 
       const dropdown = screen.getByTestId("autocomplete-dropdown-test-id");
@@ -114,11 +114,11 @@ describe("Autocomplete", () => {
 
       // Wait for results to appear
       await waitFor(() => {
-        expect(screen.getByText("Apple")).toBeInTheDocument();
+        expect(screen.getByTestId("autocomplete-dropdown-test-id")).toMatchSnapshot();
       });
 
       // Click on an item
-      const appleItem = screen.getByText("Apple");
+      const appleItem = screen.getByTestId("autocomplete-dropdown-test-id-item-0");
       await user.click(appleItem);
 
       expect(mockOnSelect).toHaveBeenCalledWith({
@@ -147,11 +147,7 @@ describe("Autocomplete", () => {
 
       await waitFor(() => {
         expect(syncFilterItems).toHaveBeenCalledWith("ap", expect.any(AbortSignal));
-        expect(screen.getByText("Apple")).toBeInTheDocument();
-        expect(screen.getByText("Apricot")).toBeInTheDocument();
-        expect(screen.getByText("Grape")).toBeInTheDocument();
-        expect(screen.getByText("Grapefruit")).toBeInTheDocument();
-        expect(screen.getByText("Pineapple")).toBeInTheDocument();
+        expect(screen.getByTestId("autocomplete-dropdown-test-id")).toMatchSnapshot();
       });
     });
 

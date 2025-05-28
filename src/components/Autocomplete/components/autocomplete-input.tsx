@@ -23,7 +23,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   defaultItems = [],
   onSelect,
   filterItems,
-  debounceMs = 500,
+  debounceMs = 300,
   minChars = 1,
   noResultsText = "No results found",
   loadingText = "Searching...",
@@ -46,6 +46,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
       setSelectedItem(item);
       setSearchQuery(item.label);
       onInputChange?.(item.label);
+      setFocusedIndex(-1);
       setIsOpen(false);
     },
     onReset: () => {
@@ -62,6 +63,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   const { ref } = useClickOutside<HTMLDivElement>({
     handleClick: () => {
       setIsOpen(false);
+      setFocusedIndex(-1);
     },
     isOpen,
   });

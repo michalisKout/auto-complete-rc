@@ -22,6 +22,7 @@ export const SuggestionItem = ({
     <div
       key={item.id}
       id={`${dropdownId}-item-${index}`}
+      data-testid={`${dropdownId}-item-${index}`}
       className={`autocomplete__item ${isSelected ? "autocomplete__item--selected" : ""}`}
       aria-selected={isFocused}
       onClick={() => handleItemSelect(item)}

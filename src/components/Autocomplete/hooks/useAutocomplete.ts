@@ -35,8 +35,10 @@ export const useAutocomplete = (
 
       setIsLoading(true);
 
+      // throttle requests if a previous request is still in progress
       if (refController.current) refController.current.abort();
 
+      // create a AbortController instance for the current request
       refController.current = new AbortController();
       const currentController = refController.current;
 
@@ -44,11 +46,14 @@ export const useAutocomplete = (
         const results = await filterItems(query, currentController.signal);
         if (!currentController.signal.aborted) setFilteredItems(results);
       } catch (err) {
-        if (!currentController.signal.aborted) {
-          setError(err instanceof Error ? err.message : "An error occurred");
-          setFilteredItems([]);
-        }
+        const error = err as Error;
+        const shouldIgnoreError = currentController.signal.aborted || error.name === "AbortError";
+        if (shouldIgnoreError) return;
+
+        setError(err instanceof Error ? err.message : "An error occurred");
+        setFilteredItems([]);
       } finally {
+        // only set loading to false if the request was not aborted
         if (!currentController.signal.aborted) setIsLoading(false);
       }
     },

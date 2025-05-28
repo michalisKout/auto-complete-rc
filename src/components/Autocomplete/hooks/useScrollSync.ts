@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { FOCUS_INDEX_ENTRY_POINT } from "./useAccessibility";
 
 interface UseScrollSyncProps {
   focusedIndex: number;
@@ -8,8 +9,9 @@ interface UseScrollSyncProps {
 
 export const useScrollSync = ({ focusedIndex, dropdownId, isOpen }: UseScrollSyncProps) => {
   useEffect(() => {
-    if (!isOpen || focusedIndex < 0) return;
+    if (!isOpen || focusedIndex < FOCUS_INDEX_ENTRY_POINT) return;
 
+    console;
     const selectedItemId = `${dropdownId}-item-${focusedIndex}`;
     const selectedItem = document.getElementById(selectedItemId);
 
