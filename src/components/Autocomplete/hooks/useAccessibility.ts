@@ -1,5 +1,5 @@
 import { type HTMLAttributes, useCallback, useState } from "react";
-import type { AutocompleteItem } from "../types";
+import type { AutocompleteItem } from "../autocomplete.types";
 
 export const useAccessibility = ({
   isOpen,

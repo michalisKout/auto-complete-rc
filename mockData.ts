@@ -1,4 +1,4 @@
-import type { AutocompleteItem } from "./src/components/Autocomplete/types";
+import type { AutocompleteItem } from "./src/components/Autocomplete/autocomplete.types";
 
 /**
  * Mock data for autocomplete component

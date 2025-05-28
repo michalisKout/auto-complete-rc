@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { mockData } from "../../../mockData";
 import { Autocomplete } from "./autocomplete";
-import type { AutocompleteItem, AutocompleteProps } from "./types";
+import type { AutocompleteItem, AutocompleteProps } from "./autocomplete.types";
 
 describe("Autocomplete", () => {
   const defaultProps: AutocompleteProps = {

@@ -97,3 +97,9 @@
   font-size: 14px;
   margin: 2px;
 }
+
+.autocomplete__highlighted {
+  background-color: var(--secondary-color);
+  font-weight: 600;
+  color: white;
+}

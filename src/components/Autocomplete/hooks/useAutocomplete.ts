@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { AutocompleteItem, FilterItemsOperator, UseAutocompleteOptions } from "../types";
+import type {
+  AutocompleteItem,
+  FilterItemsOperator,
+  UseAutocompleteOptions,
+} from "../autocomplete.types";
 
 const DEFAULT_MIN_CHARS = 1;
 

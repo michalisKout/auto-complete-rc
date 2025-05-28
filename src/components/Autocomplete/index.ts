@@ -1,3 +1,3 @@
 export { Autocomplete } from "./autocomplete";
 
-export type { AutocompleteProps } from "./types";
+export type { AutocompleteInputProps } from "./autocomplete.types";

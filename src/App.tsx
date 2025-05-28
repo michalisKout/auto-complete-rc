@@ -2,7 +2,7 @@ import { useState } from "react";
 import { mockData } from "../mockData";
 import "./App.css";
 import { Autocomplete } from "./components/Autocomplete";
-import type { AutocompleteItem } from "./components/Autocomplete/types";
+import type { AutocompleteItem } from "./components/Autocomplete/autocomplete.types";
 import type { ApiResponse } from "./star-wars-api-types";
 
 function App() {
