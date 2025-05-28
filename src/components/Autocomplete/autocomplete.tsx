@@ -32,13 +32,10 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
   const [inputValue, setInputValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<AutocompleteItem | null>(null);
-  const { filteredItems, isLoading, asyncSearch, setIsLoading, error } = useAutocomplete(
-    filterItems,
-    {
-      defaultItems,
-      minChars,
-    },
-  );
+  const { filteredItems, isLoading, asyncSearch, error } = useAutocomplete(filterItems, {
+    defaultItems,
+    minChars,
+  });
 
   const { accessibilityProps, setFocusedIndex, focusedIndex, handleKeyDown } = useAccessibility({
     isOpen,
@@ -81,7 +78,6 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    setIsLoading(true);
     setInputValue(value);
     debouncedSearch(value);
   };
@@ -118,7 +114,7 @@ export const Autocomplete: React.FC<AutocompleteProps> = ({
         onFocus={handleInputFocus}
         data-testid={inputId}
         type="text"
-        className="autocomplete__input"
+        className={`autocomplete__input ${error ? "autocomplete__input--error" : ""}`}
         value={inputValue}
         onChange={handleInputChange}
         placeholder={placeholder}

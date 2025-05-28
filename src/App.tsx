@@ -5,12 +5,6 @@ import { Autocomplete } from "./components/Autocomplete";
 import type { AutocompleteItem } from "./components/Autocomplete/types";
 import type { ApiResponse } from "./star-wars-api-types";
 
-type StarWarsHero = {
-  uid: string;
-  name: string;
-  url: string;
-};
-
 function App() {
   const [inputValue, setInputValue] = useState("");
 
@@ -61,8 +55,9 @@ function App() {
           <section className="app__section">
             <h2>Static example</h2>
             <Autocomplete
-              placeholder="Disabled input"
+              placeholder="Static input"
               defaultItems={mockData}
+              debounceMs={0}
               filterItems={(query) => {
                 return mockData.filter((item) =>
                   item.label.toLowerCase().includes(query.toLowerCase()),
@@ -73,7 +68,7 @@ function App() {
           <section className="app__section">
             <h2>Error example</h2>
             <Autocomplete
-              placeholder="Disabled input"
+              placeholder="Error input"
               defaultItems={[]}
               filterItems={filterItemsWithError}
             />

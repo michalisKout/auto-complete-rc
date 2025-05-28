@@ -63,6 +63,10 @@
   color: var(--primary-color);
 }
 
+.autocomplete__input.autocomplete__input--error {
+  border-color: var(--error-main);
+}
+
 .autocomplete__item[aria-selected="true"] {
   background-color: var(--bg-color);
   color: var(--secondary-color);

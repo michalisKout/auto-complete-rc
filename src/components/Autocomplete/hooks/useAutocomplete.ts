@@ -29,14 +29,23 @@ export const useAutocomplete = (
       setError(null);
       if (query.length < (options?.minChars || DEFAULT_MIN_CHARS)) return;
 
+      setIsLoading(true);
+
+      if (refController.current) refController.current.abort();
+
+      refController.current = new AbortController();
+      const currentController = refController.current;
+
       try {
-        const results = await filterItems(query, refController.current?.signal);
-        setFilteredItems(results);
+        const results = await filterItems(query, currentController.signal);
+        if (!currentController.signal.aborted) setFilteredItems(results);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "An error occurred");
-        setFilteredItems([]);
+        if (!currentController.signal.aborted) {
+          setError(err instanceof Error ? err.message : "An error occurred");
+          setFilteredItems([]);
+        }
       } finally {
-        setIsLoading(false);
+        if (!currentController.signal.aborted) setIsLoading(false);
       }
     },
     [filterItems, options?.minChars],
