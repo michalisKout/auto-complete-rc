@@ -1,4 +1,4 @@
-import "./Autocomplete.css";
+import "./autocomplete.css";
 import type { AutocompleteInputProps } from "./autocomplete.types";
 import { AutocompleteInput } from "./components";
 import { QueryProvider } from "./context/search-query-context";

@@ -1,5 +1,5 @@
-import type {Context} from 'react';
-import {useContext} from 'react';
+import type { Context } from "react";
+import { useContext } from "react";
 
 export function useSafeContext<T>(Context: Context<T>, hookName: string) {
   const context = useContext(Context);

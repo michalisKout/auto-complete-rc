@@ -271,6 +271,37 @@ function AxiosExample() {
 }
 ```
 
+## Deployment
+
+### GitHub Pages
+
+This project is configured for automatic deployment to GitHub Pages using GitHub Actions. The deployment workflow:
+
+1. **Triggers** on pushes to the `main` branch or manual dispatch
+2. **Builds** the project with production optimizations
+3. **Runs tests and linting** to ensure code quality
+4. **Deploys** to GitHub Pages automatically
+
+#### Setup GitHub Pages
+
+To enable GitHub Pages deployment:
+
+1. Go to your repository's **Settings** tab
+2. Navigate to **Pages** in the left sidebar
+3. Under **Source**, select **GitHub Actions**
+4. Push to the `main` branch to trigger the first deployment
+
+The app will be available at: `https://<username>.github.io/auto-complete-rc/`
+
+#### Local Production Build
+
+To test the production build locally:
+
+```bash
+npm run build
+npm run preview
+```
+
 ## Testing
 
 Run tests with:
